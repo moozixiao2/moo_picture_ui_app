@@ -81,6 +81,10 @@ export default {
         // console.log(result)
         // 判断是否还有没下一页
         if(result.res.vertical.length === 0) {
+          uni.showToast({
+            title: '没有下一页了',
+            duration: 2000
+          });
           this.hasMore = false;
           return;
         }

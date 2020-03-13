@@ -21,7 +21,7 @@
 
     <!-- 列表 开始 -->
     <view class="album_list">
-      <navigator class="album_item" v-for="item in albums" :key="item.id" url="/pages/album/index">
+      <navigator class="album_item" v-for="item in albums" :key="item.id" :url="`/pages/album/index?id=${item.id}`">
         <view class="album_img">
           <image mode="aspectFill" :src="item.cover"></image>
         </view>
@@ -67,6 +67,10 @@ export default {
         // console.log(result)
         // 是否还有下一页
         if(result.res.album.length === 0) {
+          uni.showToast({
+            title: '没有下一页了',
+            duration: 2000
+          });
           this.hasMore = false;
           return;
         }
