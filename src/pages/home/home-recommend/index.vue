@@ -2,9 +2,9 @@
   <scroll-view class="recommend_view" @scrolltolower="handleTolower" scroll-y v-if="recommends.length > 0">
     <!-- 推荐 开始 -->
     <view class="recommend_wrap">
-      <view class="recommend_item" v-for="item in recommends" :key="item.id">
+      <navigator class="recommend_item" v-for="item in recommends" :key="item.id" :url="`/pages/album/index?id=${item.target}`">
         <image mode="widthFix" :src="item.thumb"></image>
-      </view>
+      </navigator>
     </view>
     <!-- 推荐 结束 -->
 
@@ -21,8 +21,10 @@
         <view class="monthes_title_more">更多 > </view>
       </view>
       <view class="monthes_content">
-        <view class="monents_item" v-for="item in monthes.items" :key="item.id">
-          <image mode="aspectFill" :src="item.thumb + item.rule.replace('$<Height>', 360)"></image>
+        <view class="monents_item" v-for="(item, index) in monthes.items" :key="item.id">
+          <go-detail :list="monthes.items" :index="index">
+            <image mode="aspectFill" :src="item.thumb + item.rule.replace('$<Height>', 360)"></image>
+          </go-detail>
         </view>
       </view>
     </view>
@@ -34,8 +36,10 @@
         <text>热门</text>
       </view>
       <view class="hots_content">
-        <view class="hots_item" v-for="item in hots" :key="item.id">
-          <image mode='widthFix' :src='item.thumb' ></image>
+        <view class="hots_item" v-for="(item, index) in hots" :key="item.id">
+          <go-detail :list="hots" :index="index">
+            <image mode='widthFix' :src='item.thumb' ></image>
+          </go-detail>
         </view>
       </view>
     </view>
@@ -44,8 +48,12 @@
 </template>
 
 <script>
-import moment from 'moment'
+import moment from 'moment';
+import goDetail from '../../../components/goDetail';
 export default {
+  components: {
+    goDetail
+  },
   data () {
     return {
       // 请求参数
