@@ -3,6 +3,7 @@
       <view class="video_item"
         v-for="item in videowp"
         :key="item.id"
+        @click="handleToVideo(item)"
       >
         <image mode="widthFix" :src="item.img"></image>
       </view>
@@ -54,7 +55,7 @@ export default {
             this.videowp = [...this.videowp, ...result.res.videowp];
             // console.log(result);
         },
-
+        // 滚动
         handleTolower () {
             if(this.hasMore) {
                 this.urlobj.params.skip += this.urlobj.params.limit;
@@ -66,6 +67,15 @@ export default {
                     icon: 'none'
                 });
             }
+        },
+        // 图片点击事件
+        handleToVideo(item) {
+            // 数据全局共享中
+            getApp().globalData.video = item;
+            // 跳转
+            uni.navigateTo({
+                 url: '/pages/videoPlay/index'
+            });
         }
     },
 }
