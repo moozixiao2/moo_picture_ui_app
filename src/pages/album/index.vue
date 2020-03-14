@@ -13,7 +13,7 @@
       <!-- 专辑作者 开始 -->
       <view class="album_author">
           <view class="album_author_info">
-              <image mode="widthFix" :src="album.user.avatar"></image>
+              <image mode="aspectFill" :src="album.user.avatar"></image>
               <view class="author_name">{{album.user.name}}</view>
           </view>
           <view class="album_author_desc">
@@ -167,6 +167,7 @@ export default {
       width: 33.33%;
       border: 3rpx solid #fff;
     image {
+      height: 180rpx;
     }
   }
 }
