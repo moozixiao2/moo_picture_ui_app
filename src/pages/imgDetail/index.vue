@@ -14,7 +14,9 @@
 
       <!-- 高清大图 开始 -->
       <view class="high_img">
-          <image mode="widthFix" :src="imgDetail.thumb"></image>
+          <swiper-action @swiperAction="handleSwiperAction">
+            <image mode="widthFix" :src="imgDetail.thumb"></image>
+          </swiper-action>
       </view>
       <!-- 高清大图 结束 -->
 
@@ -129,7 +131,12 @@
 import moment from 'moment';
 // 设置语言为中文
 moment.locale('zh-cn');
+
+import swiperAction from '@/components/swiperAction'
 export default {
+    components: {
+        swiperAction
+    },
     data () {
         return {
             // 图片详情对象（有用户头像）
@@ -139,21 +146,32 @@ export default {
             // 最新评论
             comment: [],
             // 热门评论
-            hot: []
+            hot: [],
+            // 图片索引
+            imgIndex: 0
         }
     },
     onLoad() {
         // console.log(getApp().globalData);
-        const {imgList, imgIndex} = getApp().globalData;
-        this.imgDetail = imgList[imgIndex];
-        this.imgDetail.newThumb = this.imgDetail.thumb + this.imgDetail.rule.replace('$<Height>', 360);
-        // xx年前
-        this.imgDetail.natime = moment(this.imgDetail.atime * 1000).fromNow();
-
-        // 图片详情id, 调用接口
-        this.getComments(this.imgDetail.id);
+        const {imgIndex} = getApp().globalData;
+        
+        this.imgIndex = imgIndex;
+        this.getData();
     },
     methods: {
+        // 给当前页赋值
+        getData() {
+            const {imgList} = getApp().globalData;
+            this.imgDetail = imgList[this.imgIndex];
+            this.imgDetail.newThumb = this.imgDetail.thumb + this.imgDetail.rule.replace('$<Height>', 360);
+            // xx年前
+            this.imgDetail.natime = moment(this.imgDetail.atime * 1000).fromNow();
+
+            // 图片详情id, 调用接口
+            this.getComments(this.imgDetail.id);
+        },
+
+        // 调接口
         getComments(id) {
             this.request({
                 url: `http://157.122.54.189:9088/image/v2/wallpaper/wallpaper/${id}/comment`
@@ -168,6 +186,33 @@ export default {
                 this.comment = result.res.comment;
                 this.hot = result.res.hot;
             })
+        },
+
+        // 滑动 
+        handleSwiperAction(e) {
+            /* 
+                左滑 imgIndex ++
+                右滑 imgIndex --
+                判断 数组是否越界
+                左滑 e.direction === "left" && this.imgIndex < imgList.length - 1
+                右滑 e.direction === "right" && this.imgIndex > 0
+            */
+            const {imgList} = getApp().globalData;
+           if(e.direction === "left" && this.imgIndex < imgList.length - 1) {
+               // 左滑
+               this.imgIndex ++;
+               this.getData();
+           } else if(e.direction === "right" && this.imgIndex > 0) {
+               // 右滑
+               this.imgIndex --;
+               this.getData();
+           } else {
+               uni.showToast({
+                   title: "没有数据了",
+                   duration: 2000,
+                   icon: "none"
+               });
+           }
         }
     },
 }
