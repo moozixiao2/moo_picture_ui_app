@@ -41,7 +41,7 @@ export default {
             let direction = '';
 
             // 判断用户滑动距离 是否合法 合法：判断滑动方向
-            if(Math.abs(endX - this.startX) > 10) {
+            if(Math.abs(endX - this.startX) > 10 && Math.abs(endY -  this.startY) < 10) {
                 // 滑动方向
                 direction = endX - this.startX > 0 ? 'right' : 'left';
             }else {
